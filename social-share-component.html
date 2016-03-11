@@ -37,6 +37,10 @@ Polymer({
       type: String,
       value: "facebook,twitter,pinterest,google_plus,email"
     },
+    target: {
+      type: String,
+      value: "_blank"
+    },
     networks: {
       type: Object,
       value: {
@@ -92,7 +96,7 @@ Polymer({
               href: this.href,
               description: "",
               image: ""
-            }));
+            }), this.target);
           }.bind(this), true);
           this.appendChild(btn);
         }
