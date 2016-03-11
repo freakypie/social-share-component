@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../social-share-component.html">
+  </head>
+  <body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <social-share id="no-link"></social-share>
+    <social-share id="links" href="google.com"></social-share>
+    <social-share id="share3" show="facebook" href="google.com"></social-share>
+    <social-share id="share4" show="facebook,pomp" href="google.com"></social-share>
+    <script>
+      var share1 = document.querySelector('#no-link');
+      var share2 = document.querySelector('#links');
+      var share3 = document.querySelector('#share3');
+
+      suite('<social-share>', function() {
+
+        test('requires a `link` attributes', function() {
+          assert.equal(share1.innerHTML, "No link provided");
+        });
+        test("renders default list of networks", function() {
+          assert.equal(share2.children.length, Object.keys(share2.networks).length);
+        });
+        test("renders a social network for each in `show` attribute", function() {
+          assert.equal(share3.children.length, 1);
+        });
+        test("won't break if a bad network is given", function() {
+          assert.equal(share4.children.length, 1);
+        });
+        test("won't mind if you add networks", function() {
+          share4.networks.pomp = {
+            link: function(opts) {
+              return opts.href;
+            }
+          };
+          share4.render();
+          assert.equal(share4.children.length, 2);
+        });
+        test.skip("should add image", function() {
+
+        });
+        test.skip("should allow descriptions");
+      });
+    </script>
+
+  </body>
+</html>

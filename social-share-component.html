@@ -1,0 +1,118 @@
+<link rel="import" href="../polymer/polymer-micro.html">
+<link rel="import" href="../fontawesome-iconset/fa-all.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+{# <link rel="import" href="../paper-icon-button/paper-icon-button.html">#}
+
+<!--
+Shows social network links
+
+Example:
+
+    <social-share></social-share>
+
+@demo
+-->
+<dom-module id="social-share">
+  <style>
+    :host {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    paper-fab {
+      margin: 3px;
+    }
+  </style>
+  <template>
+  </template>
+</dom-module>
+<script>
+Polymer({
+  is: 'social-share',
+  properties: {
+    href: {
+      type: String
+    },
+    show: {
+      type: String,
+      value: "facebook,twitter,pinterest,google_plus,email"
+    },
+    networks: {
+      type: Object,
+      value: {
+        facebook: {
+          link: function(opts) {
+            return "https://www.facebook.com/sharer/sharer.php?u=" + opts.href;
+          }
+        },
+        twitter: {
+          link: function(opts) {
+            return "https://twitter.com/intent/tweet?text=" +
+              opts.description + "%20" + opts.href;
+          }
+        },
+        pinterest: {
+          link: function(opts) {
+            return "https://www.pinterest.com/pin/create/button/?url=" +
+              opts.href + "&media=" + opts.image + "&description=" +
+              opts.description;
+          }
+        },
+        google_plus: {
+          icon: "google-plus",
+          link: function(opts) {
+            return "https://plus.google.com/share?url=" + opts.description +
+              "%20" + opts.href;
+          }
+        },
+        email: {
+          icon: "envelope-o",
+          link: function(opts) {
+            return "mailto:?subject=" + opts.description + "&body=" + opts.href;
+          }
+        }
+      }
+    }
+  },
+  render: function() {
+    this.innerHTML = "";
+    if (this.href) {
+      var networks = this.show.split(",");
+      var btn = null;
+      networks.forEach(function(name) {
+        var network = this.networks[name];
+        if (network) {
+          btn = document.createElement("paper-fab");
+          btn.mini = true;
+          btn.icon = "fa:" + (network.icon || name);
+          btn.elevation = 2;
+          btn.style.margin = "2px";
+          btn.addEventListener("click", function() {
+            window.open(network.link({
+              href: this.href,
+              description: "",
+              image: ""
+            }));
+          }.bind(this), true);
+          this.appendChild(btn);
+        }
+      }.bind(this));
+    } else {
+      this.innerHTML = "No link provided";
+    }
+  },
+  ready: function() {
+    this.render();
+  },
+  attached: function() {
+    // `attached` fires once the element and its parents have been inserted
+    // into a document.
+    //
+    // This is a good place to perform any work related to your element's
+    // visual state or active behavior (measuring sizes, beginning animations,
+    // loading resources, etc).
+  },
+
+});
+</script>
